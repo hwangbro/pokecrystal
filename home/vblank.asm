@@ -24,6 +24,16 @@ VBlank::
 	ld h, [hl]
 	ld l, a
 
+    ; custom code for perfect textboxes
+    ld a, [rBGPI]
+    ld b, a
+    ld a, $39
+    ld [rBGPI], a
+    ld a, [hMissed]
+    ld [rBGPD], a
+    ld a, b
+    ld [rBGPI], a
+
 	call _hl_
 
 	call GameTimer

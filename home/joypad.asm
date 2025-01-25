@@ -399,6 +399,8 @@ PromptButton::
 	jp DelayFrames
 
 .wait_input
+    ld a, 0
+    ldh [hMissed], a ; set textbox palette to reddish
 	ldh a, [hOAMUpdate]
 	push af
 	ld a, $1
@@ -414,7 +416,9 @@ PromptButton::
 	ldh a, [hJoyPressed]
 	and A_BUTTON | B_BUTTON
 	jr nz, .received_input
-	call UpdateTimeAndPals
+    ld a, $ff
+    ldh [hMissed], a ; reset palette to white on clear
+    call UpdateTimeAndPals
 	ld a, $1
 	ldh [hBGMapMode], a
 	call DelayFrame
