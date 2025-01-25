@@ -292,6 +292,11 @@ JoyTitleScreenInput:: ; unreferenced
 JoyWaitAorB::
 .loop
 	call DelayFrame
+
+    ; custom textbox code
+    ld a, 0
+    ldh [hMissed], a
+
 	call GetJoypad
 	ldh a, [hJoyPressed]
 	and A_BUTTON | B_BUTTON
@@ -308,6 +313,11 @@ WaitButton::
 	call JoyWaitAorB
 	pop af
 	ldh [hOAMUpdate], a
+
+    ; custom textbox code
+    ld a, $ff
+    ldh [hMissed], a
+
 	ret
 
 JoyTextDelay::
@@ -399,8 +409,10 @@ PromptButton::
 	jp DelayFrames
 
 .wait_input
-    ld a, 0
+
+    ld a, $ff
     ldh [hMissed], a ; set textbox palette to reddish
+
 	ldh a, [hOAMUpdate]
 	push af
 	ld a, $1
@@ -416,8 +428,10 @@ PromptButton::
 	ldh a, [hJoyPressed]
 	and A_BUTTON | B_BUTTON
 	jr nz, .received_input
-    ld a, $ff
+
+    ld a, 0
     ldh [hMissed], a ; reset palette to white on clear
+
     call UpdateTimeAndPals
 	ld a, $1
 	ldh [hBGMapMode], a
